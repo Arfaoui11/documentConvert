@@ -1,19 +1,17 @@
 package com.example.documentconvert.Services;
 
-import com.documents4j.api.DocumentType;
-import com.documents4j.api.IConverter;
-import com.documents4j.job.LocalConverter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import javax.activation.DataSource;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
-import java.io.*;
-import java.util.concurrent.TimeUnit;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
 
 @Service
 @Slf4j
@@ -40,13 +38,13 @@ public class ProduitServiceImpl implements IProduitService {
 
 		byte[] pdfByteArray = convertWordToPDFToByte(wordFile);
 
-		/*MimeBodyPart attachment = new MimeBodyPart(new InternetHeaders(),pdfByteArray);
-		attachment.setHeader("Content-Type","application/pdf");
+		MimeBodyPart attachment = new MimeBodyPart(new InternetHeaders(),pdfByteArray);
+		attachment.setHeader("Content-Type","application/octet-stream");
 		attachment.setHeader("Content-Disposition","attachment; filename=\"" + MimeUtility.encodeText("docs","UTF-8","B")+ "\"");
 
-		DataSource dataSource = attachment.getDataHandler().getDataSource();*/
+		DataSource dataSource = attachment.getDataHandler().getDataSource();
 
-		return new ByteArrayResource(pdfByteArray);
+		return new ByteArrayResource((dataSource).getInputStream().readAllBytes());
 	}catch (Exception e)
 	{
 		e.printStackTrace();
