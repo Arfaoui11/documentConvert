@@ -64,7 +64,7 @@ pipeline {
                       steps{
                           echo 'Pulling...';
                           git branch: 'MahdiBack',
-                          url: 'https://github.com/Arfaoui11/DevOpsProjet.git';
+                          url: 'https://github.com/Arfaoui11/documentConvert.git';
                       }
         }
 
