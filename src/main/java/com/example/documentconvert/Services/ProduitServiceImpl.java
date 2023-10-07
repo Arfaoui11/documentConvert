@@ -65,7 +65,7 @@ public class ProduitServiceImpl implements IProduitService {
 		IConverter converter = LocalConverter.builder().build();
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfOutputStream.toByteArray());
 		//converter.convert(inputStream).as(DocumentType.DOCX).to(pdfByteArrayOutputStream).as(DocumentType.PDF).execute();
-		converter.convert(inputStream).as(DocumentType.DOCX).to(new FileOutputStream("src/main/resources/static/Docx/doc.pdf")).as(DocumentType.PDF).execute();
+		converter.convert(inputStream).as(DocumentType.DOCX).to(new FileOutputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/doc.pdf")).as(DocumentType.PDF).execute();
 		converter.kill();
 		document.close();
 		pdfOutputStream.close();
