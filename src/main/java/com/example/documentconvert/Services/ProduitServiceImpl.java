@@ -57,8 +57,6 @@ public class ProduitServiceImpl implements IProduitService {
 		try  {
 			IConverter converter = LocalConverter.builder()
 					.baseFolder(new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx"))
-					.workerPool(20, 25, 2, TimeUnit.SECONDS)
-					.processTimeout(5, TimeUnit.SECONDS)
 					.build();
 			File wordFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx");
 			File pdfFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.pdf");
