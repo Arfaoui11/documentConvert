@@ -68,11 +68,11 @@ pipeline {
                       }
         }
 
-        stage("Run the container with ansible"){
+        /* stage("Run the container with ansible"){
                               steps {
                                   sh 'ansible-playbook ansible-playbook.yml'
                                      }
-                         }
+                         } */
           stage("mvn show version"){
             steps {
                     sh 'mvn -version'
