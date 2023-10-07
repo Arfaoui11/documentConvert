@@ -25,6 +25,7 @@ public class ProduitServiceImpl implements IProduitService {
 	@Override
 	public ByteArrayResource convertDocxToPDF() {
 	try {
+/*
 		XWPFDocument document = new XWPFDocument(new FileInputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx"));
 		ByteArrayOutputStream pdfOutputStrem = new ByteArrayOutputStream();
 
@@ -34,16 +35,17 @@ public class ProduitServiceImpl implements IProduitService {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfOutputStrem.toByteArray());
 		ByteArrayOutputStream pdfByteArrayOutputStream = new ByteArrayOutputStream();
 		converter.convert(inputStream).as(DocumentType.DOCX).to(pdfByteArrayOutputStream).as(DocumentType.PDF).execute();
+*/		File wordFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx");
 
-		byte[] pdfByteArray = pdfByteArrayOutputStream.toByteArray();
+
+		byte[] pdfByteArray = convertWordToPDFToByte(wordFile);
 
 		MimeBodyPart attachment = new MimeBodyPart(new InternetHeaders(),pdfByteArray);
 		attachment.setHeader("Content-Type","application/pdf");
 		attachment.setHeader("Content-Disposition","attachment; filename=\"" + MimeUtility.encodeText("docs","UTF-8","B")+ "\"");
 
 		DataSource dataSource = attachment.getDataHandler().getDataSource();
-		converter.kill();
-		document.close();
+
 		return new ByteArrayResource((dataSource).getInputStream().readAllBytes());
 	}catch (Exception e)
 	{
@@ -77,6 +79,29 @@ public class ProduitServiceImpl implements IProduitService {
 		process.waitFor();
 
 		// Handle the result of the conversion process if needed
+	}
+
+	public static byte[] convertWordToPDFToByte(File inputWordFile) throws IOException, InterruptedException {
+		String command = "libreoffice --headless --convert-to pdf " + inputWordFile.getAbsolutePath() + " --outdir /tmp";
+
+		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+		processBuilder.redirectErrorStream(true);
+		Process process = processBuilder.start();
+		process.waitFor();
+
+		// Capture the output of the process
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int bytesRead;
+		while ((bytesRead = process.getInputStream().read(buffer)) != -1) {
+			outputStream.write(buffer, 0, bytesRead);
+		}
+
+		// Close the output stream
+		outputStream.close();
+
+		// Get the resulting byte array
+		return outputStream.toByteArray();
 	}
 
 
