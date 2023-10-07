@@ -55,9 +55,7 @@ public class ProduitServiceImpl implements IProduitService {
 	@Override
 	public void convertDocx() {
 		try  {
-			IConverter converter = LocalConverter.builder()
-					.baseFolder(new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx"))
-					.build();
+			IConverter converter = LocalConverter.builder().build();
 			File wordFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx");
 			File pdfFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.pdf");
 
