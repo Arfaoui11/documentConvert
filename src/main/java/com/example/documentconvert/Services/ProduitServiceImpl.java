@@ -55,18 +55,29 @@ public class ProduitServiceImpl implements IProduitService {
 	@Override
 	public void convertDocx() {
 		try  {
-			IConverter converter = LocalConverter.builder().build();
+//			IConverter converter = LocalConverter.builder().build();
 			File wordFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx");
 			File pdfFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.pdf");
 
-			converter.convert(wordFile).as(DocumentType.DOCX).to(pdfFile).as(DocumentType.PDF).execute();
+//			converter.convert(wordFile).as(DocumentType.DOCX).to(pdfFile).as(DocumentType.PDF).execute();
+
+			convertWordToPDF(wordFile,pdfFile);
 			System.out.println("Conversion complete!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public static void convertWordToPDF(File inputWordFile, File outputPdfFile) throws IOException, InterruptedException {
+		String command = "libreoffice --headless --convert-to pdf " + inputWordFile.getAbsolutePath() + " --outdir " + outputPdfFile.getParentFile().getAbsolutePath();
 
+		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+		processBuilder.redirectErrorStream(true);
+		Process process = processBuilder.start();
+		process.waitFor();
+
+		// Handle the result of the conversion process if needed
+	}
 
 
 }
