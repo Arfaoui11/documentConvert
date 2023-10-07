@@ -18,7 +18,7 @@ public class SwaggerConfig {
 	{
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.esprit.examen"))
+				.apis(RequestHandlerSelectors.basePackage("com.example.documentconvert"))
 				.paths(PathSelectors.any())
 				.build().apiInfo(apiInfo());
 	}
