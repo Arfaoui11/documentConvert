@@ -63,7 +63,7 @@ pipeline {
         stage('Checkout GIT'){
                       steps{
                           echo 'Pulling...';
-                          git branch: 'MahdiBack',
+                          git branch: 'master',
                           url: 'https://github.com/Arfaoui11/documentConvert.git';
                       }
         }
