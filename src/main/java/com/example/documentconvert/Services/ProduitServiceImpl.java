@@ -12,10 +12,8 @@ import javax.activation.DataSource;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -56,25 +54,20 @@ public class ProduitServiceImpl implements IProduitService {
 
 	@Override
 	public void convertDocx() {
-	try {
-		XWPFDocument document = new XWPFDocument(new FileInputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx"));
-		ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+		try  {
+			IConverter converter = LocalConverter.builder()
+					.baseFolder(new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx"))
+					.workerPool(20, 25, 2, TimeUnit.SECONDS)
+					.processTimeout(5, TimeUnit.SECONDS)
+					.build();
+			File wordFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx");
+			File pdfFile = new File("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.pdf");
 
-		document.write(pdfOutputStream);
-
-		IConverter converter = LocalConverter.builder().build();
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfOutputStream.toByteArray());
-		//converter.convert(inputStream).as(DocumentType.DOCX).to(pdfByteArrayOutputStream).as(DocumentType.PDF).execute();
-		converter.convert(inputStream).as(DocumentType.DOCX).to(new FileOutputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/doc.pdf")).as(DocumentType.PDF).execute();
-		converter.kill();
-		document.close();
-		pdfOutputStream.close();
-		inputStream.close();
-
-	}catch (Exception e)
-	{
-		e.printStackTrace();
-	}
+			converter.convert(wordFile).as(DocumentType.DOCX).to(pdfFile).as(DocumentType.PDF).execute();
+			System.out.println("Conversion complete!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
