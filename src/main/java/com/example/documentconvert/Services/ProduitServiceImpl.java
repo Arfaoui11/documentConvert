@@ -27,7 +27,7 @@ public class ProduitServiceImpl implements IProduitService {
 	@Override
 	public ByteArrayResource convertDocxToPDF() {
 	try {
-		XWPFDocument document = new XWPFDocument(new FileInputStream("src/main/resources/static/Docx/word.docx"));
+		XWPFDocument document = new XWPFDocument(new FileInputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx"));
 		ByteArrayOutputStream pdfOutputStrem = new ByteArrayOutputStream();
 
 		document.write(pdfOutputStrem);
@@ -57,7 +57,7 @@ public class ProduitServiceImpl implements IProduitService {
 	@Override
 	public void convertDocx() {
 	try {
-		XWPFDocument document = new XWPFDocument(new FileInputStream("src/main/resources/static/Docx/word.docx"));
+		XWPFDocument document = new XWPFDocument(new FileInputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx"));
 		ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
 
 		document.write(pdfOutputStream);
