@@ -31,13 +31,18 @@ public class ProduitRestController {
 	public ResponseEntity<ByteArrayResource> generatePdf() {
 	try {
 		ByteArrayResource fileResponse = produitService.convertDocxToPDF();
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
-				.header(HttpHeaders.CONTENT_DISPOSITION)
-				.body(fileResponse);
+		if (fileResponse != null)
+		{
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+					.header(HttpHeaders.CONTENT_DISPOSITION)
+					.body(fileResponse);
+		}
+
 	}catch (HttpClientErrorException ex)
 	{
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+		return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 	}
 
 	@GetMapping("/savePDF")

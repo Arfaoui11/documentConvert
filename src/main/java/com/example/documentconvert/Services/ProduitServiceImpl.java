@@ -40,13 +40,13 @@ public class ProduitServiceImpl implements IProduitService {
 
 		byte[] pdfByteArray = convertWordToPDFToByte(wordFile);
 
-		MimeBodyPart attachment = new MimeBodyPart(new InternetHeaders(),pdfByteArray);
+		/*MimeBodyPart attachment = new MimeBodyPart(new InternetHeaders(),pdfByteArray);
 		attachment.setHeader("Content-Type","application/pdf");
 		attachment.setHeader("Content-Disposition","attachment; filename=\"" + MimeUtility.encodeText("docs","UTF-8","B")+ "\"");
 
-		DataSource dataSource = attachment.getDataHandler().getDataSource();
+		DataSource dataSource = attachment.getDataHandler().getDataSource();*/
 
-		return new ByteArrayResource((dataSource).getInputStream().readAllBytes());
+		return new ByteArrayResource(pdfByteArray);
 	}catch (Exception e)
 	{
 		e.printStackTrace();
