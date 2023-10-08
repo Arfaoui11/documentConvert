@@ -8,6 +8,7 @@ public interface IProduitService {
 	ByteArrayResource convertDocxToPDF();
 
 	void convertDocx();
+	void convert() throws Exception;
 
 
 
