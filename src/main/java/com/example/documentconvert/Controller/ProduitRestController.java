@@ -48,15 +48,12 @@ public class ProduitRestController {
 	@ResponseBody
 	public ResponseEntity<HttpStatus> generateAndSavePdf() {
 		try {
-			produitService.convert();
+			produitService.convertDocx();
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		}catch (HttpClientErrorException ex)
 		{
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 

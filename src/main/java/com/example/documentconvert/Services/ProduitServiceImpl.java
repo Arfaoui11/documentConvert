@@ -1,11 +1,8 @@
 package com.example.documentconvert.Services;
 
 
-import com.documents4j.job.LocalConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.jodconverter.core.DocumentConverter;
-import org.jodconverter.core.office.OfficeManager;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import java.io.*;
