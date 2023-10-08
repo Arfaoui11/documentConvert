@@ -2,12 +2,9 @@ package com.example.documentconvert.Services;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
-import javax.activation.DataSource;
-import javax.mail.internet.InternetHeaders;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeUtility;
 import java.io.*;
 
 
@@ -21,8 +18,7 @@ public class ProduitServiceImpl implements IProduitService {
 	@Override
 	public ByteArrayResource convertDocxToPDF() {
 	try {
-/*
-		XWPFDocument document = new XWPFDocument(new FileInputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx"));
+	/*	XWPFDocument document = new XWPFDocument(new FileInputStream("/var/lib/jenkins/workspace/DevOps-CICD/src/main/resources/static/Docx/word.docx"));
 		ByteArrayOutputStream pdfOutputStrem = new ByteArrayOutputStream();
 
 		document.write(pdfOutputStrem);
@@ -30,8 +26,8 @@ public class ProduitServiceImpl implements IProduitService {
 		IConverter converter = LocalConverter.builder().build();
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfOutputStrem.toByteArray());
 		ByteArrayOutputStream pdfByteArrayOutputStream = new ByteArrayOutputStream();
-		converter.convert(inputStream).as(DocumentType.DOCX).to(pdfByteArrayOutputStream).as(DocumentType.PDF).execute();
-*/		File wordFile = new File("/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx/word.docx");
+		converter.convert(inputStream).as(DocumentType.DOCX).to(pdfByteArrayOutputStream).as(DocumentType.PDF).execute();*/
+		File wordFile = new File("/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx/word.docx");
 
 		return convertWordToPDFToByteArrayResource(wordFile,"/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx");
 		/*byte[] pdfByteArray = convertWordToPDFToByte(wordFile);
@@ -54,20 +50,26 @@ public class ProduitServiceImpl implements IProduitService {
 	public void convertDocx() {
 		try  {
 //			IConverter converter = LocalConverter.builder().build();
-			File wordFile = new File("/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx/word.docx");
+			//File wordFile = new File("/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx/word.docx");
 			File pdfFile = new File("/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx/word.pdf");
-
+			XWPFDocument document = new XWPFDocument(new FileInputStream("/Users/macos/IdeaProjects/documentConvert/src/main/resources/static/Docx/word.docx"));
 //			converter.convert(wordFile).as(DocumentType.DOCX).to(pdfFile).as(DocumentType.PDF).execute();
 
-			convertWordToPDF(wordFile,pdfFile);
+			convertWordToPDF(document,pdfFile);
 			System.out.println("Conversion complete!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void convertWordToPDF(File inputWordFile, File outputPdfFile) throws IOException, InterruptedException {
-		String command = "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf " + inputWordFile.getAbsolutePath() + " --outdir " + outputPdfFile.getParentFile().getAbsolutePath();
+	public static void convertWordToPDF(XWPFDocument document, File outputPdfFile) throws IOException, InterruptedException {
+		// Save the XWPFDocument to a temporary file
+		File tempFile = File.createTempFile("temp", ".docx");
+		FileOutputStream fos = new FileOutputStream(tempFile);
+		document.write(fos);
+		fos.close();
+
+		String command = "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf " + tempFile.getAbsolutePath() + " --outdir " + outputPdfFile.getParentFile().getAbsolutePath();
 
 		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
 		processBuilder.redirectErrorStream(true);
@@ -75,6 +77,9 @@ public class ProduitServiceImpl implements IProduitService {
 		process.waitFor();
 
 		// Handle the result of the conversion process if needed
+
+		// Delete the temporary file after conversion is complete
+		tempFile.delete();
 	}
 
 	public static ByteArrayResource convertWordToPDFToByteArrayOutputStream(File inputWordFile) throws IOException, InterruptedException {
